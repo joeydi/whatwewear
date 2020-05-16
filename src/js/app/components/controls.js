@@ -1,20 +1,23 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 
-import OrbitControls from '../../utils/orbitControls';
-import Config from '../../data/config';
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import Config from "../../data/config";
 
 // Controls based on orbit controls
 export default class Controls {
   constructor(camera, container) {
     // Orbit controls first needs to pass in THREE to constructor
-    const orbitControls = new OrbitControls(THREE);
-    this.threeControls = new orbitControls(camera, container);
+    this.threeControls = new OrbitControls(camera, container);
 
     this.init();
   }
 
   init() {
-    this.threeControls.target.set(Config.controls.target.x, Config.controls.target.y, Config.controls.target.z);
+    this.threeControls.target.set(
+      Config.controls.target.x,
+      Config.controls.target.y,
+      Config.controls.target.z
+    );
     this.threeControls.autoRotate = Config.controls.autoRotate;
     this.threeControls.autoRotateSpeed = Config.controls.autoRotateSpeed;
     this.threeControls.rotateSpeed = Config.controls.rotateSpeed;
@@ -24,7 +27,7 @@ export default class Controls {
     this.threeControls.minPolarAngle = Config.controls.minPolarAngle;
     this.threeControls.maxPolarAngle = Config.controls.maxPolarAngle;
     this.threeControls.enableDamping = Config.controls.enableDamping;
-    this.threeControls.enableZoom = Config.controls.enableZoom;
     this.threeControls.dampingFactor = Config.controls.dampingFactor;
+    this.threeControls.enableZoom = Config.controls.enableZoom;
   }
 }

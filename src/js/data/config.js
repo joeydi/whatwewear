@@ -55,7 +55,7 @@ export default {
     minAzimuthAngle: -Infinity,
     maxAzimuthAngle: Infinity,
     enableDamping: true,
-    dampingFactor: 0.5,
+    dampingFactor: 0.1,
     enableZoom: true,
     target: {
       x: 0,

@@ -14,7 +14,7 @@
     "webpack-watch": "webpack --env.NODE_ENV=dev --progress --color --watch --hot",
     "dev:js": "webpack --env.NODE_ENV=dev",
     "build:dir": "copyfiles -a -u 2 src/public/assets/**/*.* build/",
-    "build:js": "webpack --env.NODE_ENV=prod --progress --color"
+    "build:js": "webpack --env.NODE_ENV=prod --progress --color --display-error-details"
   },
   "dependencies": {
     "es6-promise": "^4.2.8",
