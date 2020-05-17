@@ -97,18 +97,7 @@ export default class Main {
     diameterTween.to(tweenObj, 0.25, { diameter: TopDiameter });
 
     for (let i = 0; i < planeCount; i += 1) {
-      const rotationFactor = 0.57;
-      const progress = Helpers.convertRange(i, [0, planeCount], [0, 1]);
-
-      diameterTween.progress(progress);
-
-      // X and Y use sin and cos to loop around the center
-      const positionX = Math.sin(i * rotationFactor) * tweenObj.diameter;
-      const positionZ = Math.cos(i * rotationFactor) * tweenObj.diameter;
-
-      // Y gets centered around 0 based on height
-      const positionY = Helpers.convertRange(i, [0, planeCount], [-height / 2, height / 2]);
-
+      // Modify the videoTexture to align to this plane
       const planeTexture = this.videoTexture.clone();
       planeTexture.repeat.x = 0.1;
       planeTexture.repeat.y = 0.1;
@@ -123,7 +112,33 @@ export default class Main {
       // Create and place geo in scene
       this.planes[i] = new Geometry(this.scene, planeMaterial);
       this.planes[i].make("plane")(screenWidth, screenHeight, 10, 10);
-      this.planes[i].place([positionX, positionY, positionZ], [0, 0, 0]);
+      this.planes[i].place([0, 0, 0], [0, 0, 0]);
+
+      // Create object to store our position keyframes
+      this.planes[i].keyframes = {};
+
+      // Store the texture so we can call texture.needsUpdate in the render loop
+      this.planes[i].texture = planeTexture;
+
+      // Calculate the position for the dress
+
+      const rotationFactor = 0.57;
+      const progress = Helpers.convertRange(i, [0, planeCount], [0, 1]);
+
+      diameterTween.progress(progress);
+
+      // X and Y use sin and cos to loop around the center
+      const positionX = Math.sin(i * rotationFactor) * tweenObj.diameter;
+      const positionZ = Math.cos(i * rotationFactor) * tweenObj.diameter;
+
+      // Y gets centered around 0 based on height
+      const positionY = Helpers.convertRange(i, [0, planeCount], [-height / 2, height / 2]);
+
+      // Create and place geo in scene
+      // this.planes[i] = new Geometry(this.scene, planeMaterial);
+      // this.planes[i].make("plane")(screenWidth, screenHeight, 10, 10);
+      // this.planes[i].place([positionX, positionY, positionZ], [0, 0, 0]);
+      this.planes[i].geo.position = new THREE.Vector3(positionX, positionY, positionZ);
 
       var planeVector = new THREE.Vector3(
         positionX,
@@ -133,41 +148,49 @@ export default class Main {
       this.planes[i].geo.up = planeVector.clone().normalize();
       this.planes[i].geo.lookAt(planeVector);
 
-      this.planes[i].texture = planeTexture;
+      this.planes[i].keyframes.dress = {
+        position: this.planes[i].geo.position,
+        rotation: this.planes[i].geo.rotation,
+      };
+
+      // Calculate the position for the grid
+      const gridPositionX = -(i % 11) * screenHeight + screenHeight * 5;
+      const gridPositionY = (i / 11) * screenWidth - screenWidth * 5;
+
+      this.planes[i].keyframes.grid = {
+        position: new THREE.Vector3(gridPositionX, gridPositionY, 0),
+        rotation: new THREE.Euler(0, 0, 0),
+      };
+
+      this.planes[i].mesh.position.x = gridPositionX;
+      this.planes[i].mesh.position.y = gridPositionY;
     }
 
-    // Instantiate texture class
-    // this.texture = new Texture();
-
-    // // Start loading the textures and then go on to load the model after the texture Promises have resolved
-    // this.texture.load().then(() => {
-    //   this.manager = new THREE.LoadingManager();
-
-    //   // Textures loaded, load model
-    //   this.model = new Model(this.scene, this.manager, this.texture);
-    //   this.model.load();
-
-    //   // onProgress callback
-    //   this.manager.onProgress = (item, loaded, total) => {
-    //     console.log(`${item}: ${loaded} ${total}`);
-    //   };
-
-    //   // All loaders done now
-    //   this.manager.onLoad = () => {
-    //     // Set up interaction manager with the app now that the model is finished loading
-    //     new Interaction(
-    //       this.renderer.threeRenderer,
-    //       this.scene,
-    //       this.camera.threeCamera,
-    //       this.controls.threeControls
-    //     );
-
-    //     // Everything is now fully loaded
-    //     Config.isLoaded = true;
-    //   };
-
-    // });
     this.container.querySelector("#loading").style.display = "none";
+
+    var activeKeyframe = "dress";
+    this.container.addEventListener("click", (e) => {
+      const duration = 2;
+
+      this.planes.forEach((plane, i) => {
+        gsap.to(plane.mesh.position, duration, {
+          x: plane.keyframes[activeKeyframe].position.x,
+          y: plane.keyframes[activeKeyframe].position.y,
+          z: plane.keyframes[activeKeyframe].position.z,
+          ease: "elastic.out",
+          delay: 0.005 * i,
+        });
+
+        // gsap.to(plane.mesh.rotation, duration, {
+        //   x: plane.keyframes[activeKeyframe].rotation._x,
+        //   y: plane.keyframes[activeKeyframe].rotation._y,
+        //   z: plane.keyframes[activeKeyframe].rotation._z,
+        //   ease: "expo.inOut",
+        // });
+      });
+
+      activeKeyframe = activeKeyframe == "dress" ? "grid" : "dress";
+    });
 
     new Interaction(
       this.renderer.threeRenderer,
@@ -177,9 +200,9 @@ export default class Main {
     );
 
     // Add dat.GUI controls if dev
-    // if (Config.isDev) {
-    //   new DatGUI(this);
-    // }
+    if (Config.isDev) {
+      new DatGUI(this);
+    }
 
     // Start render which does not wait for model fully loaded
     this.render();
