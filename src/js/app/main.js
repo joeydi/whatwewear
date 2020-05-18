@@ -101,8 +101,8 @@ export default class Main {
       const planeTexture = this.videoTexture.clone();
       planeTexture.repeat.x = 0.1;
       planeTexture.repeat.y = 0.1;
-      planeTexture.offset.x = 0.1 * (i % 11);
-      planeTexture.offset.y = 0.01 * i;
+      planeTexture.offset.x = 0.1 * (i % 10);
+      planeTexture.offset.y = Math.floor(0.01 * i * 10) / 10;
 
       const planeMaterial = new THREE.MeshBasicMaterial({
         map: planeTexture,
@@ -122,74 +122,73 @@ export default class Main {
 
       // Calculate the position for the dress
 
-      const rotationFactor = 0.57;
+      const rotationFactor = 0.63;
       const progress = Helpers.convertRange(i, [0, planeCount], [0, 1]);
 
       diameterTween.progress(progress);
 
       // X and Y use sin and cos to loop around the center
-      const positionX = Math.sin(i * rotationFactor) * tweenObj.diameter;
-      const positionZ = Math.cos(i * rotationFactor) * tweenObj.diameter;
+      const positionX = -Math.sin(i * rotationFactor) * tweenObj.diameter;
+      const positionZ = -Math.cos(i * rotationFactor) * tweenObj.diameter;
 
       // Y gets centered around 0 based on height
       const positionY = Helpers.convertRange(i, [0, planeCount], [-height / 2, height / 2]);
 
-      // Create and place geo in scene
-      // this.planes[i] = new Geometry(this.scene, planeMaterial);
-      // this.planes[i].make("plane")(screenWidth, screenHeight, 10, 10);
-      // this.planes[i].place([positionX, positionY, positionZ], [0, 0, 0]);
-      this.planes[i].geo.position = new THREE.Vector3(positionX, positionY, positionZ);
-
-      var planeVector = new THREE.Vector3(
+      const planeVector = new THREE.Vector3(
         positionX,
         THREE.MathUtils.lerp(0, -positionY, 0.25),
         positionZ
       );
-      this.planes[i].geo.up = planeVector.clone().normalize();
-      this.planes[i].geo.lookAt(planeVector);
+      this.planes[i].mesh.up = new THREE.Vector3(0, 1, 0);
+      this.planes[i].mesh.lookAt(planeVector);
+
+      const dressPosition = new THREE.Vector3(positionX, positionY, positionZ);
 
       this.planes[i].keyframes.dress = {
-        position: this.planes[i].geo.position,
-        rotation: this.planes[i].geo.rotation,
+        position: dressPosition,
+        rotation: this.planes[i].mesh.rotation.clone(),
       };
 
       // Calculate the position for the grid
-      const gridPositionX = -(i % 11) * screenHeight + screenHeight * 5;
-      const gridPositionY = (i / 11) * screenWidth - screenWidth * 5;
+      const gridPositionX = (i % 10) * screenWidth - screenWidth * 5;
+      const gridPositionY = Math.floor(i / 10) * screenHeight - screenHeight * 5;
 
       this.planes[i].keyframes.grid = {
         position: new THREE.Vector3(gridPositionX, gridPositionY, 0),
         rotation: new THREE.Euler(0, 0, 0),
       };
 
-      this.planes[i].mesh.position.x = gridPositionX;
-      this.planes[i].mesh.position.y = gridPositionY;
+      this.planes[i].mesh.position.set(gridPositionX, gridPositionY, 0);
+      this.planes[i].mesh.rotation.set(0, 0, 0);
     }
 
     this.container.querySelector("#loading").style.display = "none";
 
-    var activeKeyframe = "dress";
+    var activeKeyframe = "grid";
     this.container.addEventListener("click", (e) => {
       const duration = 2;
+
+      activeKeyframe = activeKeyframe == "dress" ? "grid" : "dress";
 
       this.planes.forEach((plane, i) => {
         gsap.to(plane.mesh.position, duration, {
           x: plane.keyframes[activeKeyframe].position.x,
           y: plane.keyframes[activeKeyframe].position.y,
           z: plane.keyframes[activeKeyframe].position.z,
-          ease: "elastic.out",
+          ease: activeKeyframe == "dress" ? "elastic.out" : "expo.out",
           delay: 0.005 * i,
         });
 
-        // gsap.to(plane.mesh.rotation, duration, {
-        //   x: plane.keyframes[activeKeyframe].rotation._x,
-        //   y: plane.keyframes[activeKeyframe].rotation._y,
-        //   z: plane.keyframes[activeKeyframe].rotation._z,
-        //   ease: "expo.inOut",
-        // });
-      });
+        gsap.to(plane.mesh.rotation, duration, {
+          x: plane.keyframes[activeKeyframe].rotation.x,
+          y: plane.keyframes[activeKeyframe].rotation.y,
+          z: plane.keyframes[activeKeyframe].rotation.z,
+          ease: "expo.out",
+        });
 
-      activeKeyframe = activeKeyframe == "dress" ? "grid" : "dress";
+        console.log("plane rotation", activeKeyframe);
+        console.log(plane.keyframes[activeKeyframe].rotation);
+      });
     });
 
     new Interaction(

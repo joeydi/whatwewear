@@ -39,9 +39,9 @@ export default {
     near: 2,
     far: 1000,
     aspect: 1,
-    posX: 350,
+    posX: -250,
     posY: 20,
-    posZ: -250,
+    posZ: 350,
   },
   controls: {
     autoRotate: true,
