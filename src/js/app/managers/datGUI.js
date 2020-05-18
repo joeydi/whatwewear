@@ -13,41 +13,58 @@ export default class DatGUI {
     //gui.close();
 
     /* Camera */
-    const cameraFolder = gui.addFolder("Camera");
-    const cameraFOVGui = cameraFolder.add(Config.camera, "fov", 0, 180).name("Camera FOV");
-    cameraFOVGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    // const cameraFolder = gui.addFolder("Camera");
+    // const cameraFOVGui = cameraFolder.add(Config.camera, "fov", 0, 180).name("Camera FOV");
+    // cameraFOVGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.camera.fov = value;
-    });
-    cameraFOVGui.onFinishChange(() => {
-      this.camera.updateProjectionMatrix();
+    //   this.camera.fov = value;
+    // });
+    // cameraFOVGui.onFinishChange(() => {
+    //   this.camera.updateProjectionMatrix();
 
-      this.controls.enableRotate = true;
-    });
-    const cameraAspectGui = cameraFolder.add(Config.camera, "aspect", 0, 4).name("Camera Aspect");
-    cameraAspectGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.controls.enableRotate = true;
+    // });
+    // const cameraAspectGui = cameraFolder.add(Config.camera, "aspect", 0, 4).name("Camera Aspect");
+    // cameraAspectGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.camera.aspect = value;
-    });
-    cameraAspectGui.onFinishChange(() => {
-      this.camera.updateProjectionMatrix();
+    //   this.camera.aspect = value;
+    // });
+    // cameraAspectGui.onFinishChange(() => {
+    //   this.camera.updateProjectionMatrix();
 
-      this.controls.enableRotate = true;
-    });
-    const cameraFogColorGui = cameraFolder.addColor(Config.fog, "color").name("Fog Color");
-    cameraFogColorGui.onChange((value) => {
-      main.scene.fog.color.setHex(value);
-    });
-    const cameraFogNearGui = cameraFolder.add(Config.fog, "near", 0.0, 0.01).name("Fog Near");
-    cameraFogNearGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.controls.enableRotate = true;
+    // });
+    // const cameraFogColorGui = cameraFolder.addColor(Config.fog, "color").name("Fog Color");
+    // cameraFogColorGui.onChange((value) => {
+    //   main.scene.fog.color.setHex(value);
+    // });
+    // const cameraFogNearGui = cameraFolder.add(Config.fog, "near", 0.0, 0.01).name("Fog Near");
+    // cameraFogNearGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      main.scene.fog.density = value;
-    });
-    cameraFogNearGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
+    //   main.scene.fog.density = value;
+    // });
+    // cameraFogNearGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
+
+    /* Controls */
+    const videoFolder = gui.addFolder("Video");
+    const videoGui = videoFolder
+      .add(Config, "videoSrc", {
+        "White Noise Now": "./assets/videos/wnn.mp4",
+        Reel: "./assets/videos/reel.mp4",
+        Magink: "./assets/videos/magink.mp4",
+        Alice: "./assets/videos/alice.mp4",
+      })
+      .name("Video Source");
+    videoGui.onChange((value) => {
+      console.log(value, main.video);
+
+      main.video.src = value;
+      main.video.play();
     });
 
     /* Controls */
@@ -59,7 +76,7 @@ export default class DatGUI {
         this.controls.autoRotate = value;
       });
     const controlsAutoRotateSpeedGui = controlsFolder
-      .add(Config.controls, "autoRotateSpeed", -1, 1)
+      .add(Config.controls, "autoRotateSpeed", -1, 10)
       .name("Rotation Speed");
     controlsAutoRotateSpeedGui.onChange((value) => {
       this.controls.enableRotate = false;
@@ -70,200 +87,200 @@ export default class DatGUI {
     });
 
     /* Mesh */
-    if (mesh) {
-      const meshFolder = gui.addFolder("Mesh");
-      meshFolder
-        .add(Config.mesh, "translucent", true)
-        .name("Translucent")
-        .onChange((value) => {
-          if (value) {
-            mesh.material.transparent = true;
-            mesh.material.opacity = 0.5;
-          } else {
-            mesh.material.opacity = 1.0;
-          }
-        });
-      meshFolder
-        .add(Config.mesh, "wireframe", true)
-        .name("Wireframe")
-        .onChange((value) => {
-          mesh.material.wireframe = value;
-        });
-    }
+    // if (mesh) {
+    //   const meshFolder = gui.addFolder("Mesh");
+    //   meshFolder
+    //     .add(Config.mesh, "translucent", true)
+    //     .name("Translucent")
+    //     .onChange((value) => {
+    //       if (value) {
+    //         mesh.material.transparent = true;
+    //         mesh.material.opacity = 0.5;
+    //       } else {
+    //         mesh.material.opacity = 1.0;
+    //       }
+    //     });
+    //   meshFolder
+    //     .add(Config.mesh, "wireframe", true)
+    //     .name("Wireframe")
+    //     .onChange((value) => {
+    //       mesh.material.wireframe = value;
+    //     });
+    // }
 
-    /* Lights */
-    // Ambient Light
-    const ambientLightFolder = gui.addFolder("Ambient Light");
-    ambientLightFolder
-      .add(Config.ambientLight, "enabled")
-      .name("Enabled")
-      .onChange((value) => {
-        this.light.ambientLight.visible = value;
-      });
-    ambientLightFolder
-      .addColor(Config.ambientLight, "color")
-      .name("Color")
-      .onChange((value) => {
-        this.light.ambientLight.color.setHex(value);
-      });
+    // /* Lights */
+    // // Ambient Light
+    // const ambientLightFolder = gui.addFolder("Ambient Light");
+    // ambientLightFolder
+    //   .add(Config.ambientLight, "enabled")
+    //   .name("Enabled")
+    //   .onChange((value) => {
+    //     this.light.ambientLight.visible = value;
+    //   });
+    // ambientLightFolder
+    //   .addColor(Config.ambientLight, "color")
+    //   .name("Color")
+    //   .onChange((value) => {
+    //     this.light.ambientLight.color.setHex(value);
+    //   });
 
-    // Directional Light
-    const directionalLightFolder = gui.addFolder("Directional Light");
-    directionalLightFolder
-      .add(Config.directionalLight, "enabled")
-      .name("Enabled")
-      .onChange((value) => {
-        this.light.directionalLight.visible = value;
-      });
-    directionalLightFolder
-      .addColor(Config.directionalLight, "color")
-      .name("Color")
-      .onChange((value) => {
-        this.light.directionalLight.color.setHex(value);
-      });
-    const directionalLightIntensityGui = directionalLightFolder
-      .add(Config.directionalLight, "intensity", 0, 2)
-      .name("Intensity");
-    directionalLightIntensityGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    // // Directional Light
+    // const directionalLightFolder = gui.addFolder("Directional Light");
+    // directionalLightFolder
+    //   .add(Config.directionalLight, "enabled")
+    //   .name("Enabled")
+    //   .onChange((value) => {
+    //     this.light.directionalLight.visible = value;
+    //   });
+    // directionalLightFolder
+    //   .addColor(Config.directionalLight, "color")
+    //   .name("Color")
+    //   .onChange((value) => {
+    //     this.light.directionalLight.color.setHex(value);
+    //   });
+    // const directionalLightIntensityGui = directionalLightFolder
+    //   .add(Config.directionalLight, "intensity", 0, 2)
+    //   .name("Intensity");
+    // directionalLightIntensityGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.directionalLight.intensity = value;
-    });
-    directionalLightIntensityGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
-    const directionalLightPositionXGui = directionalLightFolder
-      .add(Config.directionalLight, "x", -1000, 1000)
-      .name("Position X");
-    directionalLightPositionXGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.directionalLight.intensity = value;
+    // });
+    // directionalLightIntensityGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
+    // const directionalLightPositionXGui = directionalLightFolder
+    //   .add(Config.directionalLight, "x", -1000, 1000)
+    //   .name("Position X");
+    // directionalLightPositionXGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.directionalLight.position.x = value;
-    });
-    directionalLightPositionXGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
-    const directionalLightPositionYGui = directionalLightFolder
-      .add(Config.directionalLight, "y", -1000, 1000)
-      .name("Position Y");
-    directionalLightPositionYGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.directionalLight.position.x = value;
+    // });
+    // directionalLightPositionXGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
+    // const directionalLightPositionYGui = directionalLightFolder
+    //   .add(Config.directionalLight, "y", -1000, 1000)
+    //   .name("Position Y");
+    // directionalLightPositionYGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.directionalLight.position.y = value;
-    });
-    directionalLightPositionYGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
-    const directionalLightPositionZGui = directionalLightFolder
-      .add(Config.directionalLight, "z", -1000, 1000)
-      .name("Position Z");
-    directionalLightPositionZGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.directionalLight.position.y = value;
+    // });
+    // directionalLightPositionYGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
+    // const directionalLightPositionZGui = directionalLightFolder
+    //   .add(Config.directionalLight, "z", -1000, 1000)
+    //   .name("Position Z");
+    // directionalLightPositionZGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.directionalLight.position.z = value;
-    });
-    directionalLightPositionZGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
+    //   this.light.directionalLight.position.z = value;
+    // });
+    // directionalLightPositionZGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
 
-    // Shadow Map
-    const shadowFolder = gui.addFolder("Shadow Map");
-    shadowFolder
-      .add(Config.shadow, "enabled")
-      .name("Enabled")
-      .onChange((value) => {
-        this.light.directionalLight.castShadow = value;
-      });
-    shadowFolder
-      .add(Config.shadow, "helperEnabled")
-      .name("Helper Enabled")
-      .onChange((value) => {
-        this.light.directionalLightHelper.visible = value;
-      });
-    const shadowNearGui = shadowFolder.add(Config.shadow, "near", 0, 400).name("Near");
-    shadowNearGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    // // Shadow Map
+    // const shadowFolder = gui.addFolder("Shadow Map");
+    // shadowFolder
+    //   .add(Config.shadow, "enabled")
+    //   .name("Enabled")
+    //   .onChange((value) => {
+    //     this.light.directionalLight.castShadow = value;
+    //   });
+    // shadowFolder
+    //   .add(Config.shadow, "helperEnabled")
+    //   .name("Helper Enabled")
+    //   .onChange((value) => {
+    //     this.light.directionalLightHelper.visible = value;
+    //   });
+    // const shadowNearGui = shadowFolder.add(Config.shadow, "near", 0, 400).name("Near");
+    // shadowNearGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.directionalLight.shadow.camera.near = value;
-    });
-    shadowNearGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-      this.light.directionalLight.shadow.map.dispose();
-      this.light.directionalLight.shadow.map = null;
-      this.light.directionalLightHelper.update();
-    });
-    const shadowFarGui = shadowFolder.add(Config.shadow, "far", 0, 1200).name("Far");
-    shadowFarGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.directionalLight.shadow.camera.near = value;
+    // });
+    // shadowNearGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    //   this.light.directionalLight.shadow.map.dispose();
+    //   this.light.directionalLight.shadow.map = null;
+    //   this.light.directionalLightHelper.update();
+    // });
+    // const shadowFarGui = shadowFolder.add(Config.shadow, "far", 0, 1200).name("Far");
+    // shadowFarGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.directionalLight.shadow.camera.far = value;
-    });
-    shadowFarGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-      this.light.directionalLight.shadow.map.dispose();
-      this.light.directionalLight.shadow.map = null;
-      this.light.directionalLightHelper.update();
-    });
-    const shadowTopGui = shadowFolder.add(Config.shadow, "top", -400, 400).name("Top");
-    shadowTopGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.directionalLight.shadow.camera.far = value;
+    // });
+    // shadowFarGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    //   this.light.directionalLight.shadow.map.dispose();
+    //   this.light.directionalLight.shadow.map = null;
+    //   this.light.directionalLightHelper.update();
+    // });
+    // const shadowTopGui = shadowFolder.add(Config.shadow, "top", -400, 400).name("Top");
+    // shadowTopGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.directionalLight.shadow.camera.top = value;
-    });
-    shadowTopGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-      this.light.directionalLight.shadow.map.dispose();
-      this.light.directionalLight.shadow.map = null;
-      this.light.directionalLightHelper.update();
-    });
-    const shadowRightGui = shadowFolder.add(Config.shadow, "right", -400, 400).name("Right");
-    shadowRightGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.directionalLight.shadow.camera.top = value;
+    // });
+    // shadowTopGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    //   this.light.directionalLight.shadow.map.dispose();
+    //   this.light.directionalLight.shadow.map = null;
+    //   this.light.directionalLightHelper.update();
+    // });
+    // const shadowRightGui = shadowFolder.add(Config.shadow, "right", -400, 400).name("Right");
+    // shadowRightGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.directionalLight.shadow.camera.right = value;
-    });
-    shadowRightGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-      this.light.directionalLight.shadow.map.dispose();
-      this.light.directionalLight.shadow.map = null;
-      this.light.directionalLightHelper.update();
-    });
-    const shadowBottomGui = shadowFolder.add(Config.shadow, "bottom", -400, 400).name("Bottom");
-    shadowBottomGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.directionalLight.shadow.camera.right = value;
+    // });
+    // shadowRightGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    //   this.light.directionalLight.shadow.map.dispose();
+    //   this.light.directionalLight.shadow.map = null;
+    //   this.light.directionalLightHelper.update();
+    // });
+    // const shadowBottomGui = shadowFolder.add(Config.shadow, "bottom", -400, 400).name("Bottom");
+    // shadowBottomGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.directionalLight.shadow.camera.bottom = value;
-    });
-    shadowBottomGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-      this.light.directionalLight.shadow.map.dispose();
-      this.light.directionalLight.shadow.map = null;
-      this.light.directionalLightHelper.update();
-    });
-    const shadowLeftGui = shadowFolder.add(Config.shadow, "left", -400, 400).name("Left");
-    shadowLeftGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.directionalLight.shadow.camera.bottom = value;
+    // });
+    // shadowBottomGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    //   this.light.directionalLight.shadow.map.dispose();
+    //   this.light.directionalLight.shadow.map = null;
+    //   this.light.directionalLightHelper.update();
+    // });
+    // const shadowLeftGui = shadowFolder.add(Config.shadow, "left", -400, 400).name("Left");
+    // shadowLeftGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.directionalLight.shadow.camera.left = value;
-    });
-    shadowLeftGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-      this.light.directionalLight.shadow.map.dispose();
-      this.light.directionalLight.shadow.map = null;
-      this.light.directionalLightHelper.update();
-    });
-    const shadowBiasGui = shadowFolder.add(Config.shadow, "bias", -0.00001, 1).name("Bias");
-    shadowBiasGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.directionalLight.shadow.camera.left = value;
+    // });
+    // shadowLeftGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    //   this.light.directionalLight.shadow.map.dispose();
+    //   this.light.directionalLight.shadow.map = null;
+    //   this.light.directionalLightHelper.update();
+    // });
+    // const shadowBiasGui = shadowFolder.add(Config.shadow, "bias", -0.00001, 1).name("Bias");
+    // shadowBiasGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.directionalLight.shadow.bias = value;
-    });
-    shadowBiasGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-      this.light.directionalLight.shadow.map.dispose();
-      this.light.directionalLight.shadow.map = null;
-      this.light.directionalLightHelper.update();
-    });
+    //   this.light.directionalLight.shadow.bias = value;
+    // });
+    // shadowBiasGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    //   this.light.directionalLight.shadow.map.dispose();
+    //   this.light.directionalLight.shadow.map = null;
+    //   this.light.directionalLightHelper.update();
+    // });
 
     // Point Light
     const pointLightFolder = gui.addFolder("Point Light");

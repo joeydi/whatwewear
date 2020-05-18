@@ -66,7 +66,7 @@ export default class Main {
     const video = (this.video = document.createElement("video"));
     this.video.muted = true;
     this.video.loop = true;
-    this.video.src = "./assets/videos/reel.mp4";
+    this.video.src = Config.videoSrc;
     this.video.load(); // must call after setting/changing source
     this.video.play();
 
@@ -185,9 +185,6 @@ export default class Main {
           z: plane.keyframes[activeKeyframe].rotation.z,
           ease: "expo.out",
         });
-
-        console.log("plane rotation", activeKeyframe);
-        console.log(plane.keyframes[activeKeyframe].rotation);
       });
     });
 
