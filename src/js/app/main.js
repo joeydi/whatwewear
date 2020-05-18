@@ -164,28 +164,9 @@ export default class Main {
 
     this.container.querySelector("#loading").style.display = "none";
 
-    var activeKeyframe = "grid";
     this.container.addEventListener("click", (e) => {
-      const duration = 2;
-
-      activeKeyframe = activeKeyframe == "dress" ? "grid" : "dress";
-
-      this.planes.forEach((plane, i) => {
-        gsap.to(plane.mesh.position, duration, {
-          x: plane.keyframes[activeKeyframe].position.x,
-          y: plane.keyframes[activeKeyframe].position.y,
-          z: plane.keyframes[activeKeyframe].position.z,
-          ease: activeKeyframe == "dress" ? "elastic.out" : "expo.out",
-          delay: 0.005 * i,
-        });
-
-        gsap.to(plane.mesh.rotation, duration, {
-          x: plane.keyframes[activeKeyframe].rotation.x,
-          y: plane.keyframes[activeKeyframe].rotation.y,
-          z: plane.keyframes[activeKeyframe].rotation.z,
-          ease: "expo.out",
-        });
-      });
+      Config.arrangement = Config.arrangement == "dress" ? "grid" : "dress";
+      this.updateArrangement(Config.arrangement);
     });
 
     new Interaction(
@@ -202,6 +183,27 @@ export default class Main {
 
     // Start render which does not wait for model fully loaded
     this.render();
+  }
+
+  updateArrangement(arrangement) {
+    const duration = 2;
+
+    this.planes.forEach((plane, i) => {
+      gsap.to(plane.mesh.position, duration, {
+        x: plane.keyframes[arrangement].position.x,
+        y: plane.keyframes[arrangement].position.y,
+        z: plane.keyframes[arrangement].position.z,
+        ease: arrangement == "dress" ? "elastic.out" : "expo.out",
+        delay: 0.005 * i,
+      });
+
+      gsap.to(plane.mesh.rotation, duration, {
+        x: plane.keyframes[arrangement].rotation.x,
+        y: plane.keyframes[arrangement].rotation.y,
+        z: plane.keyframes[arrangement].rotation.z,
+        ease: "expo.out",
+      });
+    });
   }
 
   render() {

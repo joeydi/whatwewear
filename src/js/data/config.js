@@ -13,6 +13,7 @@ export default {
   dpr: 1,
   easing: TWEEN.Easing.Quadratic.InOut,
   duration: 500,
+  arrangement: "grid",
   videoSrc: "./assets/videos/wnn.mp4",
   model: {
     path: "./assets/models/Teapot.json",

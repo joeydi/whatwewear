@@ -1,4 +1,5 @@
 import Config from "../../data/config";
+import { gsap } from "gsap";
 
 // Manages all dat.GUI interactions
 export default class DatGUI {
@@ -51,8 +52,8 @@ export default class DatGUI {
     // });
 
     /* Controls */
-    const videoFolder = gui.addFolder("Video");
-    const videoGui = videoFolder
+    // const videoFolder = gui.addFolder("Video");
+    const videoGui = gui
       .add(Config, "videoSrc", {
         "White Noise Now": "./assets/videos/wnn.mp4",
         Reel: "./assets/videos/reel.mp4",
@@ -61,21 +62,30 @@ export default class DatGUI {
       })
       .name("Video Source");
     videoGui.onChange((value) => {
-      console.log(value, main.video);
-
       main.video.src = value;
       main.video.play();
     });
 
+    const arrangementGui = gui
+      .add(Config, "arrangement", {
+        Grid: "grid",
+        Dress: "dress",
+      })
+      .name("Video Arrangement")
+      .listen();
+    arrangementGui.onChange((value) => {
+      main.updateArrangement(value);
+    });
+
     /* Controls */
-    const controlsFolder = gui.addFolder("Controls");
-    controlsFolder
+    // const controlsFolder = gui.addFolder("Controls");
+    gui
       .add(Config.controls, "autoRotate")
       .name("Auto Rotate")
       .onChange((value) => {
         this.controls.autoRotate = value;
       });
-    const controlsAutoRotateSpeedGui = controlsFolder
+    const controlsAutoRotateSpeedGui = gui
       .add(Config.controls, "autoRotateSpeed", -1, 10)
       .name("Rotation Speed");
     controlsAutoRotateSpeedGui.onChange((value) => {
@@ -283,138 +293,138 @@ export default class DatGUI {
     // });
 
     // Point Light
-    const pointLightFolder = gui.addFolder("Point Light");
-    pointLightFolder
-      .add(Config.pointLight, "enabled")
-      .name("Enabled")
-      .onChange((value) => {
-        this.light.pointLight.visible = value;
-      });
-    pointLightFolder
-      .addColor(Config.pointLight, "color")
-      .name("Color")
-      .onChange((value) => {
-        this.light.pointLight.color.setHex(value);
-      });
-    const pointLightIntensityGui = pointLightFolder
-      .add(Config.pointLight, "intensity", 0, 2)
-      .name("Intensity");
-    pointLightIntensityGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    // const pointLightFolder = gui.addFolder("Point Light");
+    // pointLightFolder
+    //   .add(Config.pointLight, "enabled")
+    //   .name("Enabled")
+    //   .onChange((value) => {
+    //     this.light.pointLight.visible = value;
+    //   });
+    // pointLightFolder
+    //   .addColor(Config.pointLight, "color")
+    //   .name("Color")
+    //   .onChange((value) => {
+    //     this.light.pointLight.color.setHex(value);
+    //   });
+    // const pointLightIntensityGui = pointLightFolder
+    //   .add(Config.pointLight, "intensity", 0, 2)
+    //   .name("Intensity");
+    // pointLightIntensityGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.pointLight.intensity = value;
-    });
-    pointLightIntensityGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
-    const pointLightDistanceGui = pointLightFolder
-      .add(Config.pointLight, "distance", 0, 1000)
-      .name("Distance");
-    pointLightDistanceGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.pointLight.intensity = value;
+    // });
+    // pointLightIntensityGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
+    // const pointLightDistanceGui = pointLightFolder
+    //   .add(Config.pointLight, "distance", 0, 1000)
+    //   .name("Distance");
+    // pointLightDistanceGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.pointLight.distance = value;
-    });
-    pointLightDistanceGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
-    const pointLightPositionXGui = pointLightFolder
-      .add(Config.pointLight, "x", -1000, 1000)
-      .name("Position X");
-    pointLightPositionXGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.pointLight.distance = value;
+    // });
+    // pointLightDistanceGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
+    // const pointLightPositionXGui = pointLightFolder
+    //   .add(Config.pointLight, "x", -1000, 1000)
+    //   .name("Position X");
+    // pointLightPositionXGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.pointLight.position.x = value;
-    });
-    pointLightPositionXGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
-    const pointLightPositionYGui = pointLightFolder
-      .add(Config.pointLight, "y", -1000, 1000)
-      .name("Position Y");
-    pointLightPositionYGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.pointLight.position.x = value;
+    // });
+    // pointLightPositionXGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
+    // const pointLightPositionYGui = pointLightFolder
+    //   .add(Config.pointLight, "y", -1000, 1000)
+    //   .name("Position Y");
+    // pointLightPositionYGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.pointLight.position.y = value;
-    });
-    pointLightPositionYGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
-    const pointLightPositionZGui = pointLightFolder
-      .add(Config.pointLight, "z", -1000, 1000)
-      .name("Position Z");
-    pointLightPositionZGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.pointLight.position.y = value;
+    // });
+    // pointLightPositionYGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
+    // const pointLightPositionZGui = pointLightFolder
+    //   .add(Config.pointLight, "z", -1000, 1000)
+    //   .name("Position Z");
+    // pointLightPositionZGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.pointLight.position.z = value;
-    });
-    pointLightPositionZGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
+    //   this.light.pointLight.position.z = value;
+    // });
+    // pointLightPositionZGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
 
     // Hemi Light
-    const hemiLightFolder = gui.addFolder("Hemi Light");
-    hemiLightFolder
-      .add(Config.hemiLight, "enabled")
-      .name("Enabled")
-      .onChange((value) => {
-        this.light.hemiLight.visible = value;
-      });
-    hemiLightFolder
-      .addColor(Config.hemiLight, "color")
-      .name("Color")
-      .onChange((value) => {
-        this.light.hemiLight.color.setHex(value);
-      });
-    hemiLightFolder
-      .addColor(Config.hemiLight, "groundColor")
-      .name("ground Color")
-      .onChange((value) => {
-        this.light.hemiLight.groundColor.setHex(value);
-      });
-    const hemiLightIntensityGui = hemiLightFolder
-      .add(Config.hemiLight, "intensity", 0, 2)
-      .name("Intensity");
-    hemiLightIntensityGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    // const hemiLightFolder = gui.addFolder("Hemi Light");
+    // hemiLightFolder
+    //   .add(Config.hemiLight, "enabled")
+    //   .name("Enabled")
+    //   .onChange((value) => {
+    //     this.light.hemiLight.visible = value;
+    //   });
+    // hemiLightFolder
+    //   .addColor(Config.hemiLight, "color")
+    //   .name("Color")
+    //   .onChange((value) => {
+    //     this.light.hemiLight.color.setHex(value);
+    //   });
+    // hemiLightFolder
+    //   .addColor(Config.hemiLight, "groundColor")
+    //   .name("ground Color")
+    //   .onChange((value) => {
+    //     this.light.hemiLight.groundColor.setHex(value);
+    //   });
+    // const hemiLightIntensityGui = hemiLightFolder
+    //   .add(Config.hemiLight, "intensity", 0, 2)
+    //   .name("Intensity");
+    // hemiLightIntensityGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.hemiLight.intensity = value;
-    });
-    hemiLightIntensityGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
-    const hemiLightPositionXGui = hemiLightFolder
-      .add(Config.hemiLight, "x", -1000, 1000)
-      .name("Position X");
-    hemiLightPositionXGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.hemiLight.intensity = value;
+    // });
+    // hemiLightIntensityGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
+    // const hemiLightPositionXGui = hemiLightFolder
+    //   .add(Config.hemiLight, "x", -1000, 1000)
+    //   .name("Position X");
+    // hemiLightPositionXGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.hemiLight.position.x = value;
-    });
-    hemiLightPositionXGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
-    const hemiLightPositionYGui = hemiLightFolder
-      .add(Config.hemiLight, "y", -500, 1000)
-      .name("Position Y");
-    hemiLightPositionYGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.hemiLight.position.x = value;
+    // });
+    // hemiLightPositionXGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
+    // const hemiLightPositionYGui = hemiLightFolder
+    //   .add(Config.hemiLight, "y", -500, 1000)
+    //   .name("Position Y");
+    // hemiLightPositionYGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.hemiLight.position.y = value;
-    });
-    hemiLightPositionYGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
-    const hemiLightPositionZGui = hemiLightFolder
-      .add(Config.hemiLight, "z", -1000, 1000)
-      .name("Position Z");
-    hemiLightPositionZGui.onChange((value) => {
-      this.controls.enableRotate = false;
+    //   this.light.hemiLight.position.y = value;
+    // });
+    // hemiLightPositionYGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
+    // const hemiLightPositionZGui = hemiLightFolder
+    //   .add(Config.hemiLight, "z", -1000, 1000)
+    //   .name("Position Z");
+    // hemiLightPositionZGui.onChange((value) => {
+    //   this.controls.enableRotate = false;
 
-      this.light.hemiLight.position.z = value;
-    });
-    hemiLightPositionZGui.onFinishChange(() => {
-      this.controls.enableRotate = true;
-    });
+    //   this.light.hemiLight.position.z = value;
+    // });
+    // hemiLightPositionZGui.onFinishChange(() => {
+    //   this.controls.enableRotate = true;
+    // });
   }
 }
