@@ -19,7 +19,7 @@
   "dependencies": {
     "es6-promise": "^4.2.8",
     "gsap": "^3.2.6",
-    "three": "^0.116.0",
+    "three": "^0.125.0",
     "tween.js": "^16.6.0"
   },
   "devDependencies": {
